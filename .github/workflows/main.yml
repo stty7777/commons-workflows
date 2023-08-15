@@ -1,0 +1,30 @@
+name: commons-workflows-main
+
+on:
+  workflow_call:
+    inputs:
+      GPR_USER:
+        required: true
+        type: string
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+        env:
+          GPR_USER: ${{ inputs.GPR_USER }}
+          GPR_KEY: ${{ secrets.GPR_KEY }}
+
+      - uses: gradle/gradle-build-action@v2
+        with:
+          arguments: test
